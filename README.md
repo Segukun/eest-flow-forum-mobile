@@ -1,140 +1,179 @@
-# EEST Flow · Mobile Forum
+# Forum Mobile
 
-Mobile application developed as part of the **EEST Flow** final project for 7.º Programación at E.E.S.T. N.º 1 “República de México”.
+Aplicación móvil del foro de EEST Flow, desarrollada con React Native y Expo.
+Este repositorio contiene exclusivamente el cliente móvil.
 
-This project is a mobile complement to the main EEST Flow web platform and focuses on providing access to the **institutional forum** from mobile devices.
+## Objetivo
 
-The application is built with **React Native** and **Expo**, allowing it to be tested easily using **Expo Go**.
+La primera versión permitirá:
 
----
+- Iniciar sesión.
+- Visualizar publicaciones del foro.
+- Cerrar sesión.
 
-## About EEST Flow
+La aplicación utilizará posteriormente la misma API REST que la aplicación web.
+En futuras versiones se podrá ampliar el alcance con creación y detalle de publicaciones.
 
-EEST Flow is a private institutional platform designed to support the internal organization of the school.
+## Tecnologías
 
-The main web application includes features such as:
-
-- User authentication
-- Internal task management
-- Kanban board
-- Categories and sectors
-- Institutional users
-- Notifications
-- Internal forum
-
-This repository contains only the **mobile forum module**.
-
----
-
-## Mobile App Scope
-
-The first version of the mobile application will focus on the institutional forum.
-
-Planned features include:
-
-- View forum posts
-- View post details
-- Navigate between forum content
-- Mobile-friendly interface
-- Integration with the EEST Flow backend
-- Authenticated access when required
-
-Additional features may be added depending on the progress of the main project.
-
----
-
-## Technologies
+Cliente móvil:
 
 - React Native
 - Expo
-- JavaScript
-- Expo Go
+- JavaScript / JSX
 
-The application may also consume the existing **EEST Flow REST API** for forum data and authentication.
+La base utiliza Expo SDK 57 y las versiones de React y React Native compatibles
+incluidas en la plantilla oficial `blank` de Expo.
 
----
+Backend existente, externo a este repositorio:
 
-## Running the Project
-
-Install the dependencies:
-
-~~~bash
-npm install
-~~~
-
-Start the Expo development server:
-
-~~~bash
-npx expo start
-~~~
-
-Then open the application using:
-
-- Expo Go on Android or iOS
-- Android Emulator
-- iOS Simulator
-- Expo development tools
-
----
-
-## Project Structure
-
-The project structure will evolve as development progresses.
-
-A possible initial organization is:
-
-~~~text
-src/
-├── components/
-├── screens/
-├── navigation/
-├── services/
-├── hooks/
-├── utils/
-└── assets/
-~~~
-
----
-
-## Main Project
-
-This mobile application is part of the broader **EEST Flow** ecosystem.
-
-The main system is a private web application developed with technologies such as:
-
-- React
-- Vite
 - Node.js
 - Express
 - MongoDB
 
-The mobile application does not replace the web platform. Its purpose is to provide a simplified mobile experience for selected EEST Flow features.
+La arquitectura futura será: cliente React Native → API REST existente → Node.js + Express → MongoDB.
 
----
+## Estado
 
-## Project Status
+Expo está inicializado con JavaScript y una pantalla de inicio mínima para verificar el arranque.
+`index.js` registra `App.js` como componente raíz y `app.json` contiene la configuración de Expo.
+Los archivos de `src/` siguen siendo comentarios de responsabilidad y TODO;
+login, foro, navegación y conexión con la API están pendientes.
 
-🚧 In development
+## Ejecución local
 
-Current focus:
+Requisito: Node.js LTS y npm.
 
-- Initial React Native + Expo setup
-- Mobile forum interface
-- Navigation
-- Integration with the EEST Flow backend
+Al clonar el repositorio, instalar las dependencias con el lockfile:
 
----
+```bash
+npm ci
+```
 
-## Team
+Iniciar el servidor de desarrollo:
 
-Developed by the EEST Flow team:
+```bash
+npm start
+```
 
-- Segundo Del Giorgio
-- Aimé Sananton
-- Joaquín Cáceres
-- Benicio Ruiz
-- Raúl Bustamante
-- Sebastián Galeano
+Abrir el proyecto desde Expo Go compatible con el SDK del proyecto y escanear el QR.
+El teléfono y la computadora deben estar conectados a la misma red.
 
-**E.E.S.T. N.º 1 “República de México”**  
-7.º Programación · 2026
+Para abrir un emulador Android previamente configurado:
+
+```bash
+npm run android
+```
+
+`npm run ios` abre el simulador de iOS y requiere macOS con Xcode.
+Desde Windows se puede probar en un iPhone físico con Expo Go.
+
+## Verificación de la base
+
+Comprobar la compatibilidad de dependencias y la configuración:
+
+```bash
+npx expo install --check
+npx expo-doctor
+```
+
+Generar bundles de producción para comprobar el código sin instalar la app en un dispositivo:
+
+```bash
+npx expo export --platform android --output-dir dist/android
+npx expo export --platform ios --output-dir dist/ios
+```
+
+Esto verifica el empaquetado de JavaScript y Hermes; las pruebas en un teléfono o emulador
+se realizan por separado. Los archivos generados en `dist/` están ignorados por Git.
+
+## Estructura
+
+```text
+.
+├── assets/
+│   ├── images/
+│   │   └── .gitkeep
+│   ├── icons/
+│   │   ├── .gitkeep
+│   │   ├── android-icon-background.png
+│   │   ├── android-icon-foreground.png
+│   │   └── android-icon-monochrome.png
+│   └── logo/
+│       ├── .gitkeep
+│       └── icon.png
+├── src/
+│   ├── api/
+│   │   ├── apiClient.js
+│   │   ├── authApi.js
+│   │   └── forumApi.js
+│   ├── components/
+│   │   ├── PostCard.jsx
+│   │   ├── Loading.jsx
+│   │   └── ErrorMessage.jsx
+│   ├── config/
+│   │   └── api.js
+│   ├── context/
+│   │   └── AuthContext.jsx
+│   ├── navigation/
+│   │   └── AppNavigator.jsx
+│   ├── screens/
+│   │   ├── LoginScreen.jsx
+│   │   └── ForumScreen.jsx
+│   ├── styles/
+│   │   └── colors.js
+│   └── utils/
+│       └── .gitkeep
+├── App.js
+├── app.json
+├── index.js
+├── package.json
+├── package-lock.json
+├── .env.example
+├── .gitignore
+└── README.md
+```
+
+Los archivos `.gitkeep` mantienen la estructura de carpetas en Git.
+Los iconos actuales provienen de la plantilla oficial de Expo y son provisionales.
+
+| Carpeta | Responsabilidad prevista |
+| --- | --- |
+| `assets/` | Recursos estáticos de la aplicación. |
+| `assets/images/` | Imágenes generales. |
+| `assets/icons/` | Iconos. |
+| `assets/logo/` | Logo de la aplicación. |
+| `src/` | Código del cliente móvil. |
+| `src/api/` | Comunicación con el backend: cliente HTTP, autenticación y publicaciones. |
+| `src/components/` | Componentes reutilizables: tarjeta de publicación, carga y errores. |
+| `src/config/` | Configuración de la aplicación y URL de la API. |
+| `src/context/` | Estado global del usuario autenticado. |
+| `src/navigation/` | Navegación futura entre login y foro. |
+| `src/screens/` | Pantallas completas de login y foro. |
+| `src/styles/` | Valores visuales reutilizables, como la paleta de colores. |
+| `src/utils/` | Funciones auxiliares futuras. |
+
+## Configuración de la API
+
+`.env.example` documenta la variable pública de la URL del backend:
+
+```dotenv
+EXPO_PUBLIC_API_URL=
+```
+
+Su valor se configurará al conectar la API en una futura etapa.
+La pantalla inicial no utiliza esta variable y no requiere un archivo `.env`.
+Las variables `EXPO_PUBLIC_*` son públicas: no deben contener credenciales ni secretos.
+
+## Próximos pasos
+
+- Configurar la navegación.
+- Implementar LoginScreen.
+- Implementar ForumScreen.
+- Conectar la autenticación con la API existente.
+- Conectar la API del foro.
+
+## Referencia
+
+La inicialización utiliza las dependencias y recursos de la
+[plantilla oficial `blank` de Expo](https://docs.expo.dev/more/create-expo/).

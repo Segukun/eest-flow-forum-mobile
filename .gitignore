@@ -1,0 +1,36 @@
+# Dependencias
+node_modules/
+
+# Variables de entorno locales
+.env
+.env.*
+!.env.example
+
+# Expo y compilaciones
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Carpetas nativas generadas por Expo
+/android/
+/ios/
+.kotlin/
+
+# Archivos temporales de Metro
+.metro-health-check*
+
+# Certificados y firmas locales
+*.jks
+*.p8
+*.p12
+*.key
+*.pem
+*.mobileprovision
+
+# Logs
+*.log
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
