@@ -58,20 +58,32 @@ The application may also consume the existing **EEST Flow REST API** for forum d
 
 Install the dependencies:
 
-```bash
+~~~bash
 npm install
+~~~
 
 Start the Expo development server:
+
+~~~bash
 npx expo start
+~~~
 
 Then open the application using:
+
 - Expo Go on Android or iOS
 - Android Emulator
 - iOS Simulator
 - Expo development tools
-Project Structure
+
+---
+
+## Project Structure
+
 The project structure will evolve as development progresses.
+
 A possible initial organization is:
+
+~~~text
 src/
 ├── components/
 ├── screens/
@@ -80,30 +92,49 @@ src/
 ├── hooks/
 ├── utils/
 └── assets/
+~~~
 
-Main Project
-This mobile application is part of the broader EEST Flow ecosystem.
+---
+
+## Main Project
+
+This mobile application is part of the broader **EEST Flow** ecosystem.
+
 The main system is a private web application developed with technologies such as:
+
 - React
 - Vite
 - Node.js
 - Express
 - MongoDB
+
 The mobile application does not replace the web platform. Its purpose is to provide a simplified mobile experience for selected EEST Flow features.
-Project Status
+
+---
+
+## Project Status
+
 🚧 In development
+
 Current focus:
+
 - Initial React Native + Expo setup
 - Mobile forum interface
 - Navigation
 - Integration with the EEST Flow backend
-Team
+
+---
+
+## Team
+
 Developed by the EEST Flow team:
+
 - Segundo Del Giorgio
 - Aimé Sananton
 - Joaquín Cáceres
 - Benicio Ruiz
 - Raúl Bustamante
 - Sebastián Galeano
-E.E.S.T. N.º 1 “República de México”
+
+**E.E.S.T. N.º 1 “República de México”**  
 7.º Programación · 2026
