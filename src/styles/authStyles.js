@@ -41,6 +41,36 @@ const authStyles = StyleSheet.create({
   inputFocused: {
     borderColor: colors.green,
   },
+  passwordRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 0,
+    paddingVertical: 0,
+  },
+  passwordInput: {
+    flex: 1,
+    minWidth: 0,
+    minHeight: 56,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    color: colors.graphite,
+    fontSize: 16,
+  },
+  eyeButton: {
+    minWidth: 48,
+    minHeight: 48,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  inputDisabled: {
+    backgroundColor: colors.disabledSurface,
+  },
+  email: {
+    color: colors.graphite,
+    fontSize: 16,
+    fontWeight: '600',
+    textAlign: 'center',
+  },
   inputError: {
     borderColor: colors.error,
   },

@@ -8,6 +8,9 @@ const colors = {
   error: '#A82E23',
   muted: '#746D71',
   authOverlay: 'rgba(31, 21, 28, 0.65)',
+  terracotta: '#DC9655',
+  disabledSurface: '#EEE8E2',
+  greenTint: '#E8F3E9',
 };
 
 export default colors;

@@ -5,23 +5,25 @@ import AuthScreenLayout from '../components/AuthScreenLayout';
 import authStyles from '../styles/authStyles';
 import colors from '../styles/colors';
 
-export default function ForgotPasswordScreen({ navigation }) {
+export default function ForgotPasswordScreen({ navigation, onRequestPasswordReset, isMock }) {
   const [email, setEmail] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const [error, setError] = useState('');
-  const [message, setMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  function handleSubmit() {
-    if (!email.trim()) {
-      setMessage('');
-      setError('Ingresá tu email.');
-      return;
-    }
-
-    Keyboard.dismiss();
+  async function handleSubmit() {
+    if (isSubmitting) return;
     setError('');
-    // Aviso local: todavía no se envían emails ni se generan códigos.
-    setMessage('La recuperación se conectará al backend posteriormente.');
+    setIsSubmitting(true);
+    try {
+      const result = await onRequestPasswordReset(email);
+      Keyboard.dismiss();
+      navigation.navigate('ResetPassword', { email: result.email });
+    } catch (resetError) {
+      setError(resetError.message || 'No se pudo continuar con la recuperación.');
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   function handleBack() {
@@ -40,10 +42,10 @@ export default function ForgotPasswordScreen({ navigation }) {
           <TextInput
             accessibilityLabel="Email de recuperación"
             value={email}
+            editable={!isSubmitting}
             onChangeText={(value) => {
               setEmail(value);
               setError('');
-              setMessage('');
             }}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
@@ -74,21 +76,19 @@ export default function ForgotPasswordScreen({ navigation }) {
           </Text>
         ) : null}
 
-        {message ? (
-          <Text style={authStyles.message} accessibilityLiveRegion="polite">
-            {message}
-          </Text>
-        ) : null}
-
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Enviar código"
           onPress={handleSubmit}
-          style={({ pressed }) => [authStyles.button, pressed && authStyles.pressed]}
+          disabled={isSubmitting}
+          accessibilityState={{ busy: isSubmitting, disabled: isSubmitting }}
+          style={({ pressed }) => [authStyles.button, (pressed || isSubmitting) && authStyles.pressed]}
         >
-          <Text style={authStyles.buttonText}>Enviar código</Text>
+          <Text style={authStyles.buttonText}>{isSubmitting ? 'Continuando…' : 'Enviar código'}</Text>
         </Pressable>
       </View>
+
+      {isMock ? <Text style={authStyles.notice}>Flujo de demostración: no se envían emails.</Text> : null}
 
       <Pressable
         accessibilityRole="button"

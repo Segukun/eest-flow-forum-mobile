@@ -1,3 +1,4 @@
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRef, useState } from 'react';
 import { Keyboard, Pressable, Text, TextInput, View } from 'react-native';
 
@@ -5,23 +6,28 @@ import AuthScreenLayout from '../components/AuthScreenLayout';
 import authStyles from '../styles/authStyles';
 import colors from '../styles/colors';
 
-export default function LoginScreen({ navigation }) {
+export default function LoginScreen({ navigation, onLogin, isMock }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [focusedField, setFocusedField] = useState(null);
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const passwordInput = useRef(null);
 
-  function handleSubmit() {
-    if (!email.trim() || !password.trim()) {
-      setError('Completá email y contraseña.');
-      return;
-    }
-
+  async function handleSubmit() {
+    if (isSubmitting) return;
     setError('');
-    Keyboard.dismiss();
-    // Navegación temporal hasta conectar la API; no autentica al usuario.
-    navigation.navigate('Forum');
+    setIsSubmitting(true);
+    try {
+      // El orquestador consulta al servicio y cambia la sesión/navegación.
+      await onLogin(email, password);
+      Keyboard.dismiss();
+    } catch (loginError) {
+      setError(loginError.message || 'No se pudo iniciar sesión.');
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   function handleForgotPassword() {
@@ -40,6 +46,7 @@ export default function LoginScreen({ navigation }) {
           <TextInput
             accessibilityLabel="Email"
             value={email}
+            editable={!isSubmitting}
             onChangeText={(value) => {
               setEmail(value);
               setError('');
@@ -66,31 +73,51 @@ export default function LoginScreen({ navigation }) {
 
         <View style={authStyles.field}>
           <Text style={authStyles.label}>Contraseña</Text>
-          <TextInput
-            ref={passwordInput}
-            accessibilityLabel="Contraseña"
-            value={password}
-            onChangeText={(value) => {
-              setPassword(value);
-              setError('');
-            }}
-            onFocus={() => setFocusedField('password')}
-            onBlur={() => setFocusedField(null)}
-            onSubmitEditing={handleSubmit}
-            secureTextEntry
-            autoCapitalize="none"
-            autoCorrect={false}
-            autoComplete="current-password"
-            returnKeyType="go"
-            placeholder="Contraseña"
-            placeholderTextColor={colors.muted}
-            selectionColor={colors.green}
+          <View
             style={[
               authStyles.input,
+              authStyles.passwordRow,
               focusedField === 'password' && authStyles.inputFocused,
               Boolean(error) && !password.trim() && authStyles.inputError,
             ]}
-          />
+          >
+            <TextInput
+              ref={passwordInput}
+              accessibilityLabel="Contraseña"
+              value={password}
+              editable={!isSubmitting}
+              onChangeText={(value) => {
+                setPassword(value);
+                setError('');
+              }}
+              onFocus={() => setFocusedField('password')}
+              onBlur={() => setFocusedField(null)}
+              onSubmitEditing={handleSubmit}
+              secureTextEntry={!showPassword}
+              autoCapitalize="none"
+              autoCorrect={false}
+              autoComplete="current-password"
+              returnKeyType="go"
+              placeholder="Contraseña"
+              placeholderTextColor={colors.muted}
+              selectionColor={colors.green}
+              style={authStyles.passwordInput}
+            />
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+              onPress={() => setShowPassword((visible) => !visible)}
+              disabled={isSubmitting}
+              style={({ pressed }) => [authStyles.eyeButton, pressed && authStyles.pressed]}
+            >
+              <Ionicons
+                name={showPassword ? 'eye-off-outline' : 'eye-outline'}
+                size={22}
+                color={colors.graphite}
+                accessible={false}
+              />
+            </Pressable>
+          </View>
         </View>
 
         {error ? (
@@ -107,9 +134,11 @@ export default function LoginScreen({ navigation }) {
           accessibilityRole="button"
           accessibilityLabel="Ingresar al foro institucional"
           onPress={handleSubmit}
-          style={({ pressed }) => [authStyles.button, pressed && authStyles.pressed]}
+          disabled={isSubmitting}
+          accessibilityState={{ busy: isSubmitting, disabled: isSubmitting }}
+          style={({ pressed }) => [authStyles.button, (pressed || isSubmitting) && authStyles.pressed]}
         >
-          <Text style={authStyles.buttonText}>Ingresar</Text>
+          <Text style={authStyles.buttonText}>{isSubmitting ? 'Ingresando…' : 'Ingresar'}</Text>
         </Pressable>
 
         <Pressable
@@ -123,7 +152,9 @@ export default function LoginScreen({ navigation }) {
       </View>
 
       <Text style={authStyles.notice}>
-        Acceso exclusivo para personal autorizado.
+        {isMock
+          ? 'Acceso de demostración. No se verifican credenciales reales.'
+          : 'Acceso exclusivo para personal autorizado.'}
       </Text>
     </AuthScreenLayout>
   );
